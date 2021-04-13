@@ -90,6 +90,7 @@ def draw(x, y, scale, maxiter):
     image = -mandelbrot_test(x, y, scale, maxiter).T
     plt.imshow(image, cmap=cmap, interpolation='none')
     plt.savefig('temp.png')
+    print('SAVED')
 
 
 if __name__ == '__main__':
