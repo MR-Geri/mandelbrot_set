@@ -10,12 +10,21 @@ import matplotlib.colors as clr
 s = 1
 
 
-@njit(fastmath=True)
+@njit(fastmath=True, cache=True)
 def f(z, c):
     return z * z + c
 
 
-@njit(fastmath=True)
+@njit(fastmath=True, cache=True)
+def count_z(z, c, maxiter):
+    for depth in range(maxiter):
+        z = f(z, c)
+        if abs(z) > 100:
+            return depth
+    return depth
+
+
+@njit(fastmath=True, cache=True)
 def mandelbrot(x, y, scale, maxiter):
     pic = np.zeros((1000, 1000, 3), dtype=np.float64)
     for i in range(1000):
@@ -27,10 +36,7 @@ def mandelbrot(x, y, scale, maxiter):
 
             z = 0
 
-            for depth in range(maxiter):
-                z = f(z, c)
-                if abs(z) > 100:
-                    break
+            depth = count_z(z, c, maxiter)
 
             c = depth * (255 / maxiter).real
             pic[i, j] = np.array((c, c, c), dtype=np.float64)
@@ -59,7 +65,9 @@ def mandelbrot_draw(x, y, scale):
     global s
     pygame.init()
     win = pygame.display.set_mode((1000, 1000))
+    t = time.time()
     pic = mandelbrot(0, 0, 0.5, 1000)
+    print(time.time() - t)
     surfarray.blit_array(win, pic)
     pygame.display.update()
     while True:
