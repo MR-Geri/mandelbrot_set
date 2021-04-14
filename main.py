@@ -102,11 +102,11 @@ def draw(x, y, scale, maxiter):
     t = datetime.datetime.now()
     image = -mandelbrot_test(x, y, scale, maxiter).T
     plt.imshow(image, cmap=cmap, interpolation='none')
-    plt.savefig(f'temp_color_{t.strftime("%H_%M_%S")}.png')
+    plt.savefig(f'{t.strftime("%H_%M_%S")}_temp_color.png')
     # ЧБ
     image = mandelbrot_test(x, y, scale, maxiter, 255).T
     plt.imshow(image, cmap='gray', interpolation='none')
-    plt.savefig(f'temp_gray_{t.strftime("%H_%M_%S")}.png')
+    plt.savefig(f'{t.strftime("%H_%M_%S")}_temp_gray.png')
     print('SAVED', datetime.datetime.now() - t)
 
 
