@@ -8,18 +8,25 @@ from numba import njit
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
-s = 1
+s = 1  # Число которое увеличивает максимальную итерацию в процессе зуммирования
 
 
 @njit(fastmath=True, cache=True)
-def f(z, c):
+def func(z, c):
     return z ** 2 + c
 
 
 @njit(fastmath=True, cache=True)
 def count_z(z, c, maxiter):
+    """
+    На какой итерации число ушло в бесконечность
+    :param z: число которое уходит или не уходит в бесконечность
+    :param c: Смещение которое мы проверяем
+    :param maxiter: Кол-во итераций для проверки
+    :return: номер итерации на котором число ушло в бесконечность или же максимальное значение, если не ушло
+    """
     for depth in range(maxiter):
-        z = f(z, c)
+        z = func(z, c)
         if abs(z) > 100:
             return depth
     return maxiter
@@ -45,8 +52,8 @@ def mandelbrot(x, y, scale, maxiter):
     return pic
 
 
-@njit(fastmath=True)
-def mandelbrot_test(x, y, scale, maxiter, k=1):
+@njit(fastmath=True, cache=True)
+def mandelbrot_graph_color(x, y, scale, maxiter, k=1):
     pic = np.zeros((1000, 1000))
     for i in range(1000):
         for j in range(1000):
@@ -55,14 +62,14 @@ def mandelbrot_test(x, y, scale, maxiter, k=1):
             c = (i0 + j0 * 1j)
             z = 0
             for depth in range(maxiter):
-                z = f(z, c)
+                z = func(z, c)
                 if abs(z) > 100:
                     break
             pic[i, j] = depth / (k / maxiter)
     return pic
 
 
-def mandelbrot_draw(x, y, scale):
+def main(x, y, scale):
     global s
     pygame.init()
     win = pygame.display.set_mode((1000, 1000))
@@ -94,21 +101,21 @@ def draw(x, y, scale, maxiter):
     color = [(1 - (1 - q) ** 4, c) for q, c in zip(np.linspace(0, 1, 20),
                                                    cycle(['#154D1D', '#4D4D20', '#4D293D', '#000000', '#1C284D',
                                                           '#31B754', '#ADB754', '#B7618C', '#4F5DB7']))]
-    cmap = clr.LinearSegmentedColormap.from_list('mycmap', color, N=2048)
+    cmap = clr.LinearSegmentedColormap.from_list('mycmap', color, N=2048)  # Градиент для графика
     plt.figure(figsize=(100, 100))
     plt.xticks([])
     plt.yticks([])
     # Цветное
     t = datetime.datetime.now()
-    image = -mandelbrot_test(x, y, scale, maxiter).T
+    image = -mandelbrot_graph_color(x, y, scale, maxiter).T
     plt.imshow(image, cmap=cmap, interpolation='none')
     plt.savefig(f'{t.strftime("%H_%M_%S")}_temp_color.png')
     # ЧБ
-    image = mandelbrot_test(x, y, scale, maxiter, 255).T
+    image = mandelbrot_graph_color(x, y, scale, maxiter, 255).T
     plt.imshow(image, cmap='gray', interpolation='none')
     plt.savefig(f'{t.strftime("%H_%M_%S")}_temp_gray.png')
     print('SAVED', datetime.datetime.now() - t)
 
 
 if __name__ == '__main__':
-    mandelbrot_draw(0, 0, 0.5)
+    main(0, 0, 0.5)
