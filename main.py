@@ -98,9 +98,11 @@ def main(x, y, scale):
 
 def draw(x, y, scale, maxiter):
     # '#ffff88', '#000000', '#ffaa00'
+    # '#154D1D', '#4D4D20', '#4D293D', '#000000', '#1C284D',
+    # '#31B754', '#ADB754', '#B7618C', '#4F5DB7'
     color = [(1 - (1 - q) ** 4, c) for q, c in zip(np.linspace(0, 1, 20),
-                                                   cycle(['#154D1D', '#4D4D20', '#4D293D', '#000000', '#1C284D',
-                                                          '#31B754', '#ADB754', '#B7618C', '#4F5DB7']))]
+                                                   cycle(['#ffff88', '#000000', '#ffaa00']))]
+
     cmap = clr.LinearSegmentedColormap.from_list('mycmap', color, N=2048)  # Градиент для графика
     plt.figure(figsize=(100, 100))
     plt.xticks([])
