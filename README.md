@@ -5,3 +5,4 @@ _ПРОБЕЛ_ позволяет сохранить снимок данного
   
 <img src="https://github.com/MR-Geri/mandelbrot_set/blob/master/09_43_27_temp_color.png" width="500">
 <img src="https://github.com/MR-Geri/mandelbrot_set/blob/master/09_39_06_temp_color.png" width="500">
+<img src="https://github.com/MR-Geri/mandelbrot_set/blob/master/21_14_15_temp_gray.png" width="500">
